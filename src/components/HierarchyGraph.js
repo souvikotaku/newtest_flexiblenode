@@ -234,8 +234,8 @@ export default function HierarchyGraph() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
 
-  const onNodeClick = useCallback((id) => {
-    setSelectedNode(id);
+  const onNodeClick = useCallback((node) => {
+    setSelectedNode(node);
   }, []);
 
   // Initial nodes with only 'home'
@@ -291,17 +291,18 @@ export default function HierarchyGraph() {
 
       const { label, type } = event.active.data.current;
 
+      const newNodeId = uuidv4();
+
       const newNode = {
-        id: uuidv4(),
+        id: newNodeId,
         type: 'custom',
         data: {
           label,
-          type,
-          subtitle: type === 'exit' ? '' : 'New Step',
-          onNodeClick, // 👈 pass the function here
-          id: uuidv4(), // make sure `id` is also in `data` if you use `data.id`
+          type, // <--- this is the user type like 'tags', 'send', etc.
+          id: newNodeId,
+          onNodeClick,
         },
-        position: { x: 0, y: 0 }, // Will be layouted
+        position: { x: 0, y: 0 },
       };
 
       const lastNode =
@@ -368,7 +369,7 @@ export default function HierarchyGraph() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onNodeClick={(e, node) => onNodeClick(node.id)}
+            onNodeClick={(e, node) => onNodeClick(node)}
             onPaneClick={onPaneClick}
             nodeTypes={nodeTypes}
             fitView
@@ -380,7 +381,7 @@ export default function HierarchyGraph() {
 
         {/* Right Detail Panel */}
         <div className='w-72'>
-          <DetailPanel node={nodes.find((n) => n.id === selectedNode)} />
+          <DetailPanel node={selectedNode} />
         </div>
 
         {/* Drag Overlay */}
