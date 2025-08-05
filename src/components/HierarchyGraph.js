@@ -67,7 +67,7 @@ export const getLayoutedElements = (nodes, edges) => {
 
 // --- Custom Home Node ---
 const CustomHomeNode = ({ data, id, selected }) => {
-  const { sections, setSections } = data;
+  // const { sections, setSections } = data;
 
   const handleMouseDown = (e) => {
     if (id === 'home') {
@@ -83,7 +83,7 @@ const CustomHomeNode = ({ data, id, selected }) => {
         borderRadius: '8px',
         background: '#f9f9f9',
         width: '300px',
-        minHeight: '200px',
+        // minHeight: '200px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         color: '#333',
       }}
@@ -104,11 +104,11 @@ const CustomHomeNode = ({ data, id, selected }) => {
       <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>
         {data.label}
       </div>
-      {id === 'home' && (
+      {/* {id === 'home' && (
         <div onMouseDown={(e) => e.stopPropagation()}>
-          <HomeSections sections={sections} setSections={setSections} />
+          <HomeSections />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
@@ -178,9 +178,9 @@ const CustomNode = ({ data, selected, onNodeClick }) => {
           )}
         </div>
       </div>
-      {data.subtitle && (
+      {/* {data.subtitle && (
         <div className='text-gray-500 mt-1 text-[10px]'>{data.subtitle}</div>
-      )}
+      )} */}
     </div>
   );
 };
@@ -226,7 +226,7 @@ const DroppableCanvas = ({ children, id }) => {
 };
 
 // --- Main HierarchyGraph Component ---
-export default function HierarchyGraph({ sections, setSections }) {
+export default function HierarchyGraph() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -238,11 +238,11 @@ export default function HierarchyGraph({ sections, setSections }) {
       {
         id: 'home',
         type: 'customHome',
-        data: { label: 'Home', sections, setSections },
+        data: { label: 'Trigger' },
         position: { x: 0, y: 0 },
       },
     ],
-    [sections, setSections]
+    []
   );
 
   // Initial edges (empty for now)

@@ -1,11 +1,11 @@
 import React from 'react';
 import { pageHierarchy } from '../data/hierarchy';
 
-export default function ControlPanel({ sections, setSections }) {
+export default function ControlPanel() {
   const handleSave = () => {
     const data = {
       hierarchy: pageHierarchy,
-      homeSections: sections,
+      // homeSections: sections,
     };
     localStorage.setItem('site-structure', JSON.stringify(data));
     alert('Structure saved to localStorage.');
@@ -15,10 +15,10 @@ export default function ControlPanel({ sections, setSections }) {
     const stored = localStorage.getItem('site-structure');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (parsed.homeSections) {
-        setSections(parsed.homeSections);
-        alert('Structure loaded from localStorage.');
-      }
+      // if (parsed.homeSections) {
+      //   // setSections(parsed.homeSections);
+      //   alert('Structure loaded from localStorage.');
+      // }
     } else {
       alert('No saved structure found.');
     }

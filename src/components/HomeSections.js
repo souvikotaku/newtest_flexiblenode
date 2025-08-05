@@ -47,12 +47,12 @@ export default function HomeSections({ sections, setSections }) {
     <div className='mt-3'>
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
-          items={sections}
+          // items={sections}
           strategy={verticalListSortingStrategy}
         >
-          {sections.map((id) => (
+          {/* {sections.map((id) => (
             <DraggableSection key={id} id={id} />
-          ))}
+          ))} */}
         </SortableContext>
       </DndContext>
     </div>
