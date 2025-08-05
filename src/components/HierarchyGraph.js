@@ -140,6 +140,17 @@ const CustomNode = ({ data, selected, onNodeClick }) => {
           height: '10px',
         }}
       />
+      <Handle
+        type='source'
+        position='bottom'
+        id='bottom'
+        style={{
+          bottom: '-5px',
+          background: '#000',
+          width: '10px',
+          height: '10px',
+        }}
+      />
       <div className='flex justify-between items-start'>
         <div className='font-semibold'>{data.label}</div>
         <div className='relative'>
@@ -299,8 +310,6 @@ export default function HierarchyGraph({ sections, setSections }) {
         const updatedNodes = [...nds, newNode];
         const { nodes: layoutedNodes, edges: layoutedEdges } =
           getLayoutedElements(updatedNodes, [...edges, newEdge]);
-        console.log('Layouted nodes:', layoutedNodes); // Debug log
-        console.log('Layouted edges:', layoutedEdges); // Debug log
         return layoutedNodes;
       });
       setEdges((eds) => [...eds, newEdge]);
