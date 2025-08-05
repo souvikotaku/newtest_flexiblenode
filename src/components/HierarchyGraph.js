@@ -126,7 +126,9 @@ const CustomNode = ({ data, selected, onNodeClick }) => {
       }`}
       onClick={(e) => {
         e.stopPropagation();
-        onNodeClick(data.id);
+        if (data.onNodeClick) {
+          data.onNodeClick(data.id);
+        }
       }}
     >
       <Handle
@@ -232,17 +234,21 @@ export default function HierarchyGraph() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
 
+  const onNodeClick = useCallback((id) => {
+    setSelectedNode(id);
+  }, []);
+
   // Initial nodes with only 'home'
   const initialNodes = useMemo(
     () => [
       {
         id: 'home',
         type: 'customHome',
-        data: { label: 'Trigger' },
+        data: { label: 'Trigger', onNodeClick, id: 'home' },
         position: { x: 0, y: 0 },
       },
     ],
-    []
+    [onNodeClick]
   );
 
   // Initial edges (empty for now)
@@ -288,7 +294,13 @@ export default function HierarchyGraph() {
       const newNode = {
         id: uuidv4(),
         type: 'custom',
-        data: { label, type, subtitle: type === 'exit' ? '' : 'New Step' },
+        data: {
+          label,
+          type,
+          subtitle: type === 'exit' ? '' : 'New Step',
+          onNodeClick, // 👈 pass the function here
+          id: uuidv4(), // make sure `id` is also in `data` if you use `data.id`
+        },
         position: { x: 0, y: 0 }, // Will be layouted
       };
 
@@ -319,10 +331,6 @@ export default function HierarchyGraph() {
 
   const handleDragCancel = useCallback(() => {
     setActiveItem(null);
-  }, []);
-
-  const onNodeClick = useCallback((id) => {
-    setSelectedNode(id);
   }, []);
 
   const onPaneClick = useCallback(() => {
