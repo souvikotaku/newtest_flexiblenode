@@ -16,7 +16,6 @@ import {
 } from '@dnd-kit/core';
 import { v4 as uuidv4 } from 'uuid';
 import dagre from 'dagre';
-import HomeSections from './HomeSections';
 import DetailPanel from './DetailPanel';
 
 // --- Layout Utility ---
@@ -139,12 +138,6 @@ const CustomHomeNode = ({ data, id, selected }) => {
           </div>
         )}
       </div>
-      {/* Uncomment if HomeSections is needed */}
-      {/* {id === 'home' && (
-        <div onMouseDown={(e) => e.stopPropagation()}>
-          <HomeSections />
-        </div>
-      )} */}
     </div>
   );
 };
