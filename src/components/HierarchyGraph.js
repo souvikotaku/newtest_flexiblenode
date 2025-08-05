@@ -85,6 +85,10 @@ const CustomHomeNode = ({ data, id, selected }) => {
         width: '300px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         color: '#333',
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}
       onMouseDown={handleMouseDown}
       className={selected ? 'ring-2 ring-indigo-500' : ''}
@@ -115,8 +119,9 @@ const CustomHomeNode = ({ data, id, selected }) => {
         </button>
         {menuOpen && (
           <div
-            className='absolute right-0 top-full mt-1 bg-white border rounded shadow-sm text-xs z-10'
+            className='absolute right-0 top-0 mt-1 bg-white border rounded shadow-sm text-xs z-10'
             onClick={(e) => e.stopPropagation()}
+            style={{ top: '100%', right: 0 }}
           >
             <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer'>
               Edit
