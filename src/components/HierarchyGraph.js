@@ -67,7 +67,8 @@ export const getLayoutedElements = (nodes, edges) => {
 
 // --- Custom Home Node ---
 const CustomHomeNode = ({ data, id, selected }) => {
-  // const { sections, setSections } = data;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const handleMouseDown = (e) => {
     if (id === 'home') {
@@ -83,7 +84,6 @@ const CustomHomeNode = ({ data, id, selected }) => {
         borderRadius: '8px',
         background: '#f9f9f9',
         width: '300px',
-        // minHeight: '200px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         color: '#333',
       }}
@@ -104,6 +104,42 @@ const CustomHomeNode = ({ data, id, selected }) => {
       <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>
         {data.label}
       </div>
+      <div className='relative'>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen((o) => !o);
+          }}
+          className='text-gray-500 hover:text-gray-800'
+        >
+          ⋮
+        </button>
+        {menuOpen && (
+          <div
+            className='absolute right-0 top-full mt-1 bg-white border rounded shadow-sm text-xs z-10'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer'>
+              Edit
+            </div>
+            <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer'>
+              Change
+            </div>
+            <div
+              className='px-3 py-1 hover:bg-gray-100 cursor-pointer'
+              onClick={() => {
+                if (data.onDeleteConnection) {
+                  data.onDeleteConnection(id);
+                }
+                setMenuOpen(false);
+              }}
+            >
+              Delete Connection
+            </div>
+          </div>
+        )}
+      </div>
+      {/* Uncomment if HomeSections is needed */}
       {/* {id === 'home' && (
         <div onMouseDown={(e) => e.stopPropagation()}>
           <HomeSections />
@@ -114,7 +150,7 @@ const CustomHomeNode = ({ data, id, selected }) => {
 };
 
 // --- Custom Node ---
-const CustomNode = ({ data, selected, onNodeClick }) => {
+const CustomNode = ({ data, selected }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -176,13 +212,21 @@ const CustomNode = ({ data, selected, onNodeClick }) => {
               <div className='px-3 py-1 hover:bg-gray-100 cursor-pointer'>
                 Change
               </div>
+              <div
+                className='px-3 py-1 hover:bg-gray-100 cursor-pointer'
+                onClick={() => {
+                  if (data.onDeleteConnection) {
+                    data.onDeleteConnection(data.id);
+                  }
+                  setMenuOpen(false);
+                }}
+              >
+                Delete Connection
+              </div>
             </div>
           )}
         </div>
       </div>
-      {/* {data.subtitle && (
-        <div className='text-gray-500 mt-1 text-[10px]'>{data.subtitle}</div>
-      )} */}
     </div>
   );
 };
@@ -238,17 +282,26 @@ export default function HierarchyGraph() {
     setSelectedNode(node);
   }, []);
 
+  const onDeleteConnection = useCallback(
+    (nodeId) => {
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+      );
+    },
+    [setEdges]
+  );
+
   // Initial nodes with only 'home'
   const initialNodes = useMemo(
     () => [
       {
         id: 'home',
         type: 'customHome',
-        data: { label: 'Trigger', onNodeClick, id: 'home' },
+        data: { label: 'Trigger', onNodeClick, onDeleteConnection, id: 'home' },
         position: { x: 0, y: 0 },
       },
     ],
-    [onNodeClick]
+    [onNodeClick, onDeleteConnection]
   );
 
   // Initial edges (empty for now)
@@ -298,9 +351,10 @@ export default function HierarchyGraph() {
         type: 'custom',
         data: {
           label,
-          type, // <--- this is the user type like 'tags', 'send', etc.
+          type,
           id: newNodeId,
           onNodeClick,
+          onDeleteConnection,
         },
         position: { x: 0, y: 0 },
       };
@@ -327,7 +381,15 @@ export default function HierarchyGraph() {
       });
       setEdges((eds) => [...eds, newEdge]);
     },
-    [nodes, initialNodes, edges, setNodes, setEdges]
+    [
+      nodes,
+      initialNodes,
+      edges,
+      setNodes,
+      setEdges,
+      onNodeClick,
+      onDeleteConnection,
+    ]
   );
 
   const handleDragCancel = useCallback(() => {
