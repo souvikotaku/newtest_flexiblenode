@@ -28,7 +28,7 @@ const homeNodeHeight = 200;
 export const getLayoutedElements = (nodes, edges) => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: 'TB', ranksep: 100, nodesep: 50 });
+  dagreGraph.setGraph({ rankdir: 'TB', ranksep: 30, nodesep: 30 });
 
   nodes.forEach((node) => {
     if (node.id === 'home') {
