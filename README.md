@@ -1,5 +1,3 @@
-# The live app is deployed here
-https://hierarchy-editor.netlify.app/
 
 # Getting Started with Create React App
 
