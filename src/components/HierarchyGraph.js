@@ -136,17 +136,6 @@ const CustomHomeNode = ({ data, id, selected }) => {
             >
               Delete Connection
             </div>
-            <div
-              className='px-3 py-1 hover:bg-gray-100 cursor-pointer'
-              onClick={() => {
-                if (data.onDeleteNode) {
-                  data.onDeleteNode(id);
-                }
-                setMenuOpen(false);
-              }}
-            >
-              Delete
-            </div>
           </div>
         )}
       </div>
@@ -315,10 +304,12 @@ export default function HierarchyGraph() {
 
   const onDeleteNode = useCallback(
     (nodeId) => {
-      setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-      setEdges((eds) =>
-        eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
-      );
+      if (nodeId !== 'home') {
+        setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+        setEdges((eds) =>
+          eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+        );
+      }
     },
     [setNodes, setEdges]
   );
@@ -333,13 +324,12 @@ export default function HierarchyGraph() {
           label: 'Trigger',
           onNodeClick,
           onDeleteConnection,
-          onDeleteNode,
           id: 'home',
         },
         position: { x: 0, y: 0 },
       },
     ],
-    [onNodeClick, onDeleteConnection, onDeleteNode]
+    [onNodeClick, onDeleteConnection]
   );
 
   // Initial edges (empty for now)
