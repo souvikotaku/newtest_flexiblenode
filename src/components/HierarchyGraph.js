@@ -136,6 +136,17 @@ const CustomHomeNode = ({ data, id, selected }) => {
             >
               Delete Connection
             </div>
+            <div
+              className='px-3 py-1 hover:bg-gray-100 cursor-pointer'
+              onClick={() => {
+                if (data.onDeleteNode) {
+                  data.onDeleteNode(id);
+                }
+                setMenuOpen(false);
+              }}
+            >
+              Delete
+            </div>
           </div>
         )}
       </div>
@@ -223,6 +234,17 @@ const CustomNode = ({ data, selected }) => {
               >
                 Delete Connection
               </div>
+              <div
+                className='px-3 py-1 hover:bg-gray-100 cursor-pointer'
+                onClick={() => {
+                  if (data.onDeleteNode) {
+                    data.onDeleteNode(data.id);
+                  }
+                  setMenuOpen(false);
+                }}
+              >
+                Delete
+              </div>
             </div>
           )}
         </div>
@@ -291,17 +313,33 @@ export default function HierarchyGraph() {
     [setEdges]
   );
 
+  const onDeleteNode = useCallback(
+    (nodeId) => {
+      setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+      );
+    },
+    [setNodes, setEdges]
+  );
+
   // Initial nodes with only 'home'
   const initialNodes = useMemo(
     () => [
       {
         id: 'home',
         type: 'customHome',
-        data: { label: 'Trigger', onNodeClick, onDeleteConnection, id: 'home' },
+        data: {
+          label: 'Trigger',
+          onNodeClick,
+          onDeleteConnection,
+          onDeleteNode,
+          id: 'home',
+        },
         position: { x: 0, y: 0 },
       },
     ],
-    [onNodeClick, onDeleteConnection]
+    [onNodeClick, onDeleteConnection, onDeleteNode]
   );
 
   // Initial edges (empty for now)
@@ -355,6 +393,7 @@ export default function HierarchyGraph() {
           id: newNodeId,
           onNodeClick,
           onDeleteConnection,
+          onDeleteNode,
         },
         position: { x: 0, y: 0 },
       };
@@ -389,6 +428,7 @@ export default function HierarchyGraph() {
       setEdges,
       onNodeClick,
       onDeleteConnection,
+      onDeleteNode,
     ]
   );
 
